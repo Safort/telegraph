@@ -2,9 +2,9 @@
 name = "telegraph"
 version = "0.1.1"
 authors = ["Safort <a.asafort@gmail.com>"]
+repository = "https://github.com/Safort/telegraph"
 description = "Unofficial Telegraph library"
 license = "MIT"
-repository = ""
 
 [dependencies]
 hyper = "0.9"
