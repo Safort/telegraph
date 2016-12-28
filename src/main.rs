@@ -1,6 +1,6 @@
-extern crate telegraph_rs;
+extern crate telegraph;
 
-use telegraph_rs::account::{Account};
+use telegraph::account::{Account};
 
 fn main() {
     let mut user = Account::new("short_name", "author_name", "author_url");

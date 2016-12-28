@@ -1,6 +1,6 @@
 [package]
-name = "telegraph-rs"
-version = "0.1.0"
+name = "telegraph"
+version = "0.1.1"
 authors = ["Safort <a.asafort@gmail.com>"]
 description = "Unofficial Telegraph library"
 license = "MIT"
