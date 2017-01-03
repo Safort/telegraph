@@ -43,21 +43,53 @@ impl Account {
         self
     }
 
-    pub fn create_account(&mut self) -> Account {
+    pub fn create_account(&mut self) -> String {
         let req_url = format!(
             "https://api.telegra.ph/createAccount?short_name={}&author_name={}",
             self.short_name,
             self.author_name
         );
         let res_json = request::get(&req_url);
-
         let decoded: CreateAccountResponse = serde_json::from_str(&res_json).unwrap();
-
-        println!("{:?}", decoded);
 
         self.set_access_token(&decoded.result.access_token)
             .set_auth_url(&decoded.result.auth_url);
 
-        decoded.result
+        res_json
     }
+
+    pub fn edit_accout_info(&self, acc: Account) -> String {
+        let url = String::from("https://api.telegra.ph/editAccountInfo?");
+        let mut params: Vec<String> = vec![];
+
+        let access_token = "access_token=".to_string() + &if acc.access_token.len() == 0 {
+                self.access_token.clone()
+            } else {
+                acc.access_token
+            };
+        params.push(access_token);
+
+        if acc.short_name.len() > 0 {
+            let short_name = "short_name=".to_string() + &acc.short_name;
+            params.push(short_name);
+        }
+        if acc.author_url.len() > 0 {
+            let author_url = "author_url=".to_string() + &acc.author_url;
+            params.push(author_url);
+        }
+        if acc.author_name.len() > 0 {
+            let author_name = "author_name=".to_string() + &acc.author_name;
+            params.push(author_name);
+        }
+        if acc.auth_url.len() > 0 {
+            let auth_url = "auth_url=".to_string() + &acc.auth_url;
+            params.push(auth_url);
+        }
+
+        let url = url + &params.join("&");
+
+        request::get(&url)
+    }
+
+
 }
