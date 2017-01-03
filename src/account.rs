@@ -1,8 +1,7 @@
 extern crate hyper;
 extern crate serde_json;
 
-use self::hyper::Client;
-use self::hyper::Url;
+use request;
 
 pub use types::{Account, CreateAccountResponse};
 
@@ -45,19 +44,12 @@ impl Account {
     }
 
     pub fn create_account(&mut self) -> Account {
-        use::std::io::Read;
-
-        let mut res_json = String::new();
-        let client = Client::new();
         let req_url = format!(
             "https://api.telegra.ph/createAccount?short_name={}&author_name={}",
             self.short_name,
             self.author_name
         );
-        let req_url = Url::parse(&req_url).unwrap();
-        let mut res = client.get(req_url).send().unwrap();
-
-        res.read_to_string(&mut res_json).unwrap();
+        let res_json = request::get(&req_url);
 
         let decoded: CreateAccountResponse = serde_json::from_str(&res_json).unwrap();
 
