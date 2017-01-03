@@ -3,8 +3,13 @@ use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Account {
+    #[serde(default)]
     pub short_name: String,
+
+    #[serde(default)]
     pub author_name: String,
+
+    #[serde(default)]
     pub author_url: String,
 
     #[serde(default)]
@@ -19,6 +24,12 @@ pub struct Account {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct CreateAccountResponse {
+    pub ok: bool,
+    pub result: Account,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct EditAccountResponse {
     pub ok: bool,
     pub result: Account,
 }
