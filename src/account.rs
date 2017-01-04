@@ -104,7 +104,7 @@ impl Account {
         Ok(decoded)
     }
 
-    pub fn get_account_info<'a>(access_token: &String, fields_list: &Vec<&str>) -> Result<EditAccountResponse, &'a str> {
+    pub fn get_account_info<'a>(&self, fields_list: &Vec<&str>) -> Result<EditAccountResponse, &'a str> {
         let fields = fields_list.iter()
             .map(|&field| "\"".to_string() + field + "\"")
             .collect::<Vec<String>>()
@@ -112,7 +112,7 @@ impl Account {
         let fields = "[".to_string() + &fields + "]";
         let url = format!(
             "https://api.telegra.ph/getAccountInfo?access_token={}&fields={}",
-            access_token,
+            self.access_token,
             fields
         );
         let res_json = request::get(&url);
