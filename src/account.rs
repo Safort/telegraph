@@ -44,12 +44,12 @@ impl Account {
     }
 
     pub fn create_account(&mut self) -> String {
-        let req_url = format!(
+        let url = format!(
             "https://api.telegra.ph/createAccount?short_name={}&author_name={}",
             self.short_name,
             self.author_name
         );
-        let res_json = request::get(&req_url);
+        let res_json = request::get(&url);
         let decoded: CreateAccountResponse = serde_json::from_str(&res_json).unwrap();
 
         self.set_access_token(&decoded.result.access_token)
@@ -58,14 +58,14 @@ impl Account {
         res_json
     }
 
-    pub fn edit_accout_info(&self, acc: Account) -> String {
+    pub fn edit_accout_info(&self, acc: &Account) -> String {
         let url = String::from("https://api.telegra.ph/editAccountInfo?");
         let mut params: Vec<String> = vec![];
 
         let access_token = "access_token=".to_string() + &if acc.access_token.len() == 0 {
                 self.access_token.clone()
             } else {
-                acc.access_token
+                acc.access_token.clone()
             };
         params.push(access_token);
 
