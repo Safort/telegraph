@@ -91,5 +91,21 @@ impl Account {
         request::get(&url)
     }
 
+    pub fn get_account_info(access_token: &String, fields_list: &Vec<&str>) -> String {
+        let fields = fields_list.iter()
+            .map(|&field| "\"".to_string() + field + "\"")
+            .collect::<Vec<String>>()
+            .join(",");
+        let fields = "[".to_string() + &fields + "]";
+
+
+        let url = format!(
+            "https://api.telegra.ph/getAccountInfo?access_token={}&fields={}",
+            access_token,
+            fields
+        );
+
+        request::get(&url)
+    }
 
 }
