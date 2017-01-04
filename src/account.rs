@@ -3,7 +3,7 @@ extern crate serde_json;
 
 use request;
 
-pub use types::{Account, CreateAccountResponse};
+pub use types::{Account, CreateAccountResponse, EditAccountResponse};
 
 
 impl Account {
@@ -48,7 +48,6 @@ impl Account {
         self
     }
 
-    pub fn create_account(&mut self) -> String {
     fn update(&mut self, new_acc: &Account) -> &mut Account {
         self.set_short_name(&new_acc.short_name);
         self.set_author_name(&new_acc.author_name);
@@ -57,6 +56,7 @@ impl Account {
         self
     }
 
+    pub fn create_account(&mut self) -> Result<CreateAccountResponse, &str> {
         let url = format!(
             "https://api.telegra.ph/createAccount?short_name={}&author_name={}",
             self.short_name,
@@ -68,10 +68,10 @@ impl Account {
         self.set_access_token(&decoded.result.access_token)
             .set_auth_url(&decoded.result.auth_url);
 
-        res_json
+        Ok(decoded)
     }
 
-    pub fn edit_accout_info(&self, acc: &Account) -> String {
+    pub fn edit_accout_info(&mut self, acc: &Account) -> Result<EditAccountResponse, &str> {
         let url = String::from("https://api.telegra.ph/editAccountInfo?");
         let mut params: Vec<String> = vec![];
 
@@ -86,37 +86,40 @@ impl Account {
             let short_name = "short_name=".to_string() + &acc.short_name;
             params.push(short_name);
         }
-        if acc.author_url.len() > 0 {
-            let author_url = "author_url=".to_string() + &acc.author_url;
-            params.push(author_url);
-        }
         if acc.author_name.len() > 0 {
             let author_name = "author_name=".to_string() + &acc.author_name;
             params.push(author_name);
         }
-        if acc.auth_url.len() > 0 {
-            let auth_url = "auth_url=".to_string() + &acc.auth_url;
-            params.push(auth_url);
+        if acc.author_url.len() > 0 {
+            let author_url = "author_url=".to_string() + &acc.author_url;
+            params.push(author_url);
         }
 
         let url = url + &params.join("&");
+        let res_json = request::get(&url);
+        let decoded: EditAccountResponse = serde_json::from_str(&res_json).unwrap();
 
-        request::get(&url)
+        self.update(&decoded.result);
+
+        Ok(decoded)
     }
 
-    pub fn get_account_info(access_token: &String, fields_list: &Vec<&str>) -> String {
+    pub fn get_account_info<'a>(access_token: &String, fields_list: &Vec<&str>) -> Result<EditAccountResponse, &'a str> {
         let fields = fields_list.iter()
             .map(|&field| "\"".to_string() + field + "\"")
             .collect::<Vec<String>>()
             .join(",");
         let fields = "[".to_string() + &fields + "]";
-
-
         let url = format!(
             "https://api.telegra.ph/getAccountInfo?access_token={}&fields={}",
             access_token,
             fields
         );
+        let res_json = request::get(&url);
+        let decoded: EditAccountResponse = serde_json::from_str(&res_json).unwrap();
+
+        Ok(decoded)
+    }
 
         request::get(&url)
     }
