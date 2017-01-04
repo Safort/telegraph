@@ -1,3 +1,4 @@
+use std::default::Default;
 use std::collections::HashMap;
 
 
@@ -20,6 +21,19 @@ pub struct Account {
 
     #[serde(default)]
     pub page_count: i32,
+}
+
+impl Default for Account {
+    fn default() -> Self {
+        Account {
+            short_name: String::new(),
+            author_name: String::new(),
+            author_url: String::new(),
+            access_token: String::new(),
+            auth_url: String::new(),
+            page_count: 0,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
