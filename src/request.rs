@@ -1,4 +1,3 @@
-extern crate serde_json;
 extern crate hyper;
 
 use self::hyper::Client;
