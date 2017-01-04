@@ -49,6 +49,14 @@ impl Account {
     }
 
     pub fn create_account(&mut self) -> String {
+    fn update(&mut self, new_acc: &Account) -> &mut Account {
+        self.set_short_name(&new_acc.short_name);
+        self.set_author_name(&new_acc.author_name);
+        self.set_author_url(&new_acc.author_url);
+
+        self
+    }
+
         let url = format!(
             "https://api.telegra.ph/createAccount?short_name={}&author_name={}",
             self.short_name,
