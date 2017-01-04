@@ -38,6 +38,11 @@ impl Account {
         self
     }
 
+    pub fn set_page_count(&mut self, page_count: &i32) -> &mut Account {
+        self.page_count = page_count.clone();
+        self
+    }
+
     pub fn set_access_token(&mut self, access_token: &str) -> &mut Account {
         self.access_token = access_token.to_string();
         self
