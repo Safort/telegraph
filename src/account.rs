@@ -121,7 +121,17 @@ impl Account {
         Ok(decoded)
     }
 
-        request::get(&url)
+    pub fn revoke_access_token(&mut self) -> Result<EditAccountResponse, &str> {
+        let url = format!(
+            "https://api.telegra.ph/revokeAccessToken?access_token={}",
+            self.access_token
+        );
+        let res_json = request::get(&url);
+        let decoded: EditAccountResponse = serde_json::from_str(&res_json).unwrap();
+        
+        self.set_access_token(&decoded.result.access_token);
+
+        Ok(decoded)
     }
 
 }
