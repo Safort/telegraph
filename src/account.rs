@@ -71,7 +71,7 @@ impl Account {
         Ok(decoded)
     }
 
-    pub fn edit_accout_info(&mut self, acc: &Account) -> Result<EditAccountResponse, &str> {
+    pub fn edit_account_info(&mut self, acc: &Account) -> Result<EditAccountResponse, &str> {
         let url = String::from("https://api.telegra.ph/editAccountInfo?");
         let mut params: Vec<String> = vec![];
 
