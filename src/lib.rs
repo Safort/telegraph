@@ -3,8 +3,9 @@
 #[macro_use]
 extern crate serde_derive;
 
+#[macro_use]
 extern crate serde_json;
 
 pub mod account;
-mod types;
+pub mod types;
 mod request;
