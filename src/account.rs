@@ -3,7 +3,7 @@ extern crate serde_json;
 
 use request;
 
-pub use types::{Account, CreateAccountResponse, EditAccountResponse};
+pub use types::*;
 
 
 impl Account {
@@ -128,10 +128,26 @@ impl Account {
         );
         let res_json = request::get(&url);
         let decoded: EditAccountResponse = serde_json::from_str(&res_json).unwrap();
-        
+
         self.set_access_token(&decoded.result.access_token);
 
         Ok(decoded)
     }
 
+    pub fn create_page(&mut self, page: &Page, return_content: bool) -> Result<CreatePageResponse, &str> {
+        let mut url = format!("https://api.telegra.ph/createPage?");
+        let mut params: Vec<String> = vec![];
+
+        params.push("access_token=".to_string() + &self.access_token);
+        params.push("title=".to_string() + &page.title);
+        params.push("content=".to_string() + &page.content.to_string());
+        params.push("return_content=".to_string() + &return_content.to_string());
+
+        url = url + &params.join("&");
+
+        let res_json = request::get(&url);
+        let decoded: CreatePageResponse = serde_json::from_str(&res_json).unwrap();
+
+        Ok(decoded)
+    }
 }
