@@ -168,4 +168,17 @@ impl Account {
 
         Ok(decoded)
     }
+
+    pub fn get_page<'a>(path: String, return_content: bool) -> Result<GetPageResponse, &'a str> {
+        let mut url = format!("https://api.telegra.ph/getPage/{}?", path);
+
+        if return_content == true {
+            url = url + "return_content=true";
+        }
+
+        let res_json = request::get(&url);
+        let decoded: GetPageResponse = serde_json::from_str(&res_json).unwrap();
+
+        Ok(decoded)
+    }
 }

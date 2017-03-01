@@ -126,3 +126,9 @@ pub struct CreatePageResponse {
     pub ok: bool,
     pub result: Page,
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct GetPageResponse {
+    pub ok: bool,
+    pub result: Page,
+}
