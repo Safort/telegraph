@@ -2,6 +2,7 @@ extern crate hyper;
 extern crate serde_json;
 
 use request;
+use serde_json::{from_str, from_value};
 
 pub use types::*;
 
@@ -178,6 +179,32 @@ impl Account {
 
         let res_json = request::get(&url);
         let decoded: GetPageResponse = serde_json::from_str(&res_json).unwrap();
+
+        Ok(decoded)
+    }
+
+
+    pub fn get_views<'a>(path: String, year: i32, month: i32, day: i32, hour: i32) -> Result<PageViewsResponse, &'a str> {
+        let mut url = format!("https://api.telegra.ph/getViews/{}?", path);
+        let mut params: Vec<String> = vec![];
+
+        if year > 0 {
+            params.push("year=".to_string() + &year.to_string());
+        }
+        if month > 0 {
+            params.push("month=".to_string() + &month.to_string());
+        }
+        if day > 0 {
+            params.push("day=".to_string() + &day.to_string());
+        }
+        if hour > -1 {
+            params.push("hour=".to_string() + &hour.to_string());
+        }
+
+        url = url + &params.join("&");
+
+        let res_json = request::get(&url);
+        let decoded: PageViewsResponse = serde_json::from_str(&res_json).unwrap();
 
         Ok(decoded)
     }
